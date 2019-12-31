@@ -3,9 +3,6 @@
     <div class="mt-4 mb-2">
       <v-icon small>mdi-feather</v-icon>
       <span class="headline font-weight-light">NewsFeed</span>
-      <v-btn small icon color="green" class="ml-2 mb-2">
-        <v-icon small>mdi-plus</v-icon>
-      </v-btn>
     </div>
     <ul class="notifications">
       <li v-for="notification in notifications" :key="notification.title" class="notification">
@@ -18,13 +15,28 @@
           </v-list-item-title>
           <v-divider class="mt-2"></v-divider>
           <p class="grey--text text--darken-1 mt-3 newsfeed-content">
-            {{ notification.description.slice(0,Math.max(250, notification.description.length)) }}
+            {{ notification.description.slice(0, Math.max(250, notification.description.length)) }}
             {{ notification.description.length > 250 ? '...' : '' }}
           </p>
           <v-card-actions>
             <v-chip class="mr-1" color="indigo lighten-2" outlined v-for="tag in notification.tags" :key="tag">
               # {{ tag }}
             </v-chip>
+            <v-spacer></v-spacer>
+            <v-btn icon color="indigo lighten-1" @click="openModal(notification)">
+              <v-icon>mdi-cube-scan</v-icon>
+            </v-btn>
+            <v-dialog v-model="dialog" max-width="800">
+              <v-card>
+                <v-card-title>{{ not_title }}</v-card-title>
+                <v-divider></v-divider>
+                <v-card-text class="mt-3">{{ not_desc }}</v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn text class="mr-5 mb-5" color="indigo" @click="dialog=false">Close</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-card-actions>
         </v-card>
       </li>
@@ -44,6 +56,9 @@ export default {
   components: { Progress },
   data() {
     return {
+      dialog: false,
+      not_title: null,
+      not_desc: null,
       colors: {
         'general': 'grey lighten-1',
         'challenge': 'red lighten-1',
@@ -55,6 +70,14 @@ export default {
         'event': 'mdi-star'
       },
       notifications: []
+    }
+  },
+  methods: {
+    openModal(not) {
+      console.log(not)
+      this.not_title = not.title
+      this.not_desc = not.description
+      this.dialog = true
     }
   },
   created() {

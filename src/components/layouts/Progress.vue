@@ -1,5 +1,5 @@
 <template>
-  <div class="progress" align="center">
+  <div class="progress-circular" align="center">
     <v-progress-circular
       indeterminate
       color="orange lighten-3"
@@ -16,7 +16,7 @@ export default {
 
 <style>
 
-.progress {
+.progress-circular {
   margin: 10% auto;
 }
 

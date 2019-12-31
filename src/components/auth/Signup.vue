@@ -1,7 +1,16 @@
 <template>
   <div class="signup-page">
     <v-card outlined>
-      <v-card-title class="font-weight-light">Sign Up</v-card-title>
+      <v-card-title class="font-weight-light">
+        Sign Up
+        <v-spacer></v-spacer>
+        <v-tooltip left color="grey lighten-3">
+          <template v-slot:activator="{ on }">
+            <v-icon small v-on="on">mdi-information-outline</v-icon>
+          </template>
+          <span class="black--text signup-helptext">Your authentication information is handled securely with firebase authentication</span>
+        </v-tooltip>
+      </v-card-title>
       <v-form @submit.prevent="signUp" id="signup-form">
         <v-text-field
           required outlined v-model="email"
@@ -20,9 +29,13 @@
             <v-icon color="red">mdi-alert-outline</v-icon>
             {{ feedback }}
           </p>
+          <p v-else class="ml-3 mt-2">
+            <v-icon small color="orange">mdi-plus</v-icon>
+            Join our Slack channel as well
+          </p>
           <v-spacer></v-spacer>
           <v-btn
-          type="submit" text outlined class="ma-3 font-weight-light"
+          type="submit" dark text outlined class="ma-3 font-weight-light indigo lighten-3"
           @click="signUp">Submit</v-btn>
         </v-card-actions>
       </v-form>
@@ -95,6 +108,10 @@ div.signup-page {
 
 .signup-page #signup-form {
   font-weight: 300;
+}
+
+.signup-helptext {
+  font-size: 0.9em;
 }
 
 </style>

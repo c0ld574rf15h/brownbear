@@ -2,15 +2,18 @@
   <v-app>
     <Appbar />
     <router-view id="page-content" />
+    <Footer />
   </v-app>
 </template>
 
 <script>
 import Appbar from '@/components/layouts/Appbar'
+import Footer from '@/components/layouts/Footer'
+//import Progress from '@/components/layouts/Progress'
 
 export default {
   name: 'app',
-  components: { Appbar }
+  components: { Appbar, Footer }
 }
 </script>
 

@@ -8,10 +8,12 @@
         </v-toolbar-title>
       </router-link>
       <v-spacer></v-spacer>
-      <v-btn small text dark>
-        <v-icon left>mdi-key</v-icon>
-        <span class="font-weight-light">Login</span>
-      </v-btn>
+      <router-link :to="{ name: 'signin' }" class="link">
+        <v-btn small text dark>
+          <v-icon left>mdi-key</v-icon>
+          <span class="font-weight-light">Login</span>
+        </v-btn>
+      </router-link>
       <router-link :to="{ name: 'signup' }" class="link">
         <v-btn small text dark class="ml-2">
           <v-icon left>mdi-account-plus</v-icon>

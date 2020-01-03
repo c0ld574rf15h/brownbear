@@ -1,8 +1,8 @@
 <template>
   <div class="newsfeed section" v-if="notifications.length">
     <div class="mt-4 mb-2">
-      <v-icon small>mdi-feather</v-icon>
-      <span class="headline font-weight-light">NewsFeed</span>
+        <v-icon class="mb-2 mr-1">mdi-feather</v-icon>
+        <span class="headline font-weight-light">NewsFeed</span>
     </div>
     <ul class="notifications">
       <li v-for="notification in notifications" :key="notification.title" class="notification">

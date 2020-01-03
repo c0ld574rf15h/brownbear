@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'progress'
+  name: 'circular-progress'
 }
 </script>
 

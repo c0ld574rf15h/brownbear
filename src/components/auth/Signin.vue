@@ -12,7 +12,7 @@
           class="mx-3 mb-2" label="Password" type="password"
           color="brown"></v-text-field>
         <v-card-actions>
-          <p class="red--text ml-3" v-if="feedback">
+          <p class="red--text ml-3 caption" v-if="feedback">
             <v-icon color="red">mdi-alert-outline</v-icon>
             {{ feedback }}
           </p>

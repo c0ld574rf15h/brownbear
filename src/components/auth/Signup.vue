@@ -85,6 +85,11 @@ export default {
                 ref.set({
                   handle: this.handle,
                   user_id: creds.user.uid,
+                  points: 0,
+                  ladder: 'mint',
+                  group: '',
+                  bio: '',
+                  isAdmin: false
                 })
               }).then(() => this.$router.push({ name: 'dashboard' }))
                 .catch(err => { this.feedback = err.message })

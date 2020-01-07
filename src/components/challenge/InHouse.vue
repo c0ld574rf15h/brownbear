@@ -116,7 +116,7 @@ export default {
                 const user = firebase.auth().currentUser
                 addSolver({ user_id: user.uid, chall_id: chall.id, doc_id: user.uid+':'+chall.id })
                   .then(res => {
-                    if(res.status) {
+                    if(!res.malicious) {
                       this.loading = false
                       this.input_flag = ""
                       this.snackbar = true

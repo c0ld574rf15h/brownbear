@@ -28,8 +28,6 @@ exports.newSolve = functions.https.onCall(data => {
   }).then(() => {
     admin.firestore().collection('users').doc(data.user_handle).update({
       points: admin.firestore.FieldValue.increment(data.chall_point)
-        .then(() => console.log('Success with newSolve'))
-        .catch(err => console.log(err))
     })
   })
 })
@@ -38,14 +36,16 @@ exports.addSolver = functions.https.onCall(data => {
   const ref = admin.firestore().collection('solved').doc(data.doc_id)
   return ref.get().then(doc => {
     if(doc.exists) {
-      return { status: false }
+      return { malicious: true }
     } else {
       ref.set({
-        status: true,
         user: data.user_id,
         chall: data.chall_id
-      }).then(() => console.log('Success with addSolver'))
-        .catch(err => console.log(err))
+      }).then(() => {
+        console.log('Add Solver Success')
+      }).catch(err => {
+        console.log(err)
+      })
     }
   })
 })

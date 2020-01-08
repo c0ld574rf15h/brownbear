@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import Dashboard from '@/components/dashboard/Dashboard'
 import Signup from '@/components/auth/Signup'
 import Signin from '@/components/auth/Signin'
+import Wikis from '@/components/wikis/Wikis'
 import Challenge from '@/components/challenge/Challenge'
 import LeaderBoard from '@/components/challenge/LeaderBoard'
 
@@ -29,6 +30,14 @@ const routes = [
     path: '/signin',
     name: 'signin',
     component: Signin
+  },
+  {
+    path: '/wikis',
+    name: 'wikis',
+    component: Wikis,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/challenge',

@@ -1,5 +1,5 @@
 <template>
-  <v-footer absolute color="orange lighten-3">
+  <v-footer absolute color="orange lighten-3" id="page-footer">
     <v-spacer></v-spacer>
     <div class="font-weight-light">
       &copy; {{ new Date().getFullYear() }}
@@ -23,6 +23,10 @@ export default {
 
 v-footer {
   max-width: 1000px;
+}
+
+#page-footer {
+  margin-top: 5vh;
 }
 
 #cybercat {

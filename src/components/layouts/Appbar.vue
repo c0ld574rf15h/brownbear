@@ -20,6 +20,12 @@
           <span class="font-weight-light">Signup</span>
         </v-btn>
       </router-link>
+      <router-link :to="{ name: 'wikis' }" class="link" v-if="user">
+        <v-btn small text dark>
+          <v-icon left>mdi-fountain-pen-tip</v-icon>
+          <span class="font-weight-light">Wikis</span>
+        </v-btn>
+      </router-link>
       <router-link :to="{ name: 'challenge' }" class="link" v-if="user">
         <v-btn small text dark>
           <v-icon left>mdi-sword</v-icon>

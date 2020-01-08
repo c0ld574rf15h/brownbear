@@ -169,6 +169,10 @@ export default {
 
 <style scoped>
 
+.inhouse-challenges {
+  margin-bottom: 10vh !important;
+}
+
 .hint-link {
   text-decoration: none;
   color: inherit;

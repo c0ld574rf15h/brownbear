@@ -17,5 +17,7 @@ export default {
 </script>
 
 <style>
-
+.dashboard {
+  margin-bottom: 10vh !important;
+}
 </style>

@@ -66,6 +66,10 @@ export default {
 </script>
 
 <style>
+.leaderboard {
+  margin-bottom: 10vh !important;
+}
+
 div.board-items:hover {
   background-color: rgb(236, 236, 255)
 }

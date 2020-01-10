@@ -36,10 +36,12 @@
         <v-icon left>mdi-airplane-takeoff</v-icon>
         <span class="font-weight-light">Logout</span>
       </v-btn>
-      <v-btn small text dark class="ml-2" v-if="user">
-        <v-icon left>mdi-account-circle</v-icon>
-        <span class="font-weight-light">{{ profile }}</span>
-      </v-btn>
+      <router-link :to="{ name: 'viewProfile', params: {id: profile} }" class="link" v-if="user">
+        <v-btn small text dark class="ml-2">
+          <v-icon left>mdi-account-circle</v-icon>
+          <span class="font-weight-light">{{ profile }}</span>
+        </v-btn>
+      </router-link>
     </v-app-bar>
   </div>
 </template>

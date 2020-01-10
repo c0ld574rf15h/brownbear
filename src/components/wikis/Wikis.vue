@@ -1,13 +1,18 @@
 <template>
   <div class="wikis">
     <div class="mt-4 mb-2">
-      <v-icon color="pink darken-1" class="mb-2 mr-1">mdi-fountain-pen-tip</v-icon>
-      <span class="headline font-weight-light">Wikis</span>
-      <v-divider class="my-4"></v-divider>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis ab mollitia inventore et odit dolorum repellat tempore ex quibusdam sit, magnam facere, eveniet earum asperiores perspiciatis unde cum. Soluta, amet!</p>
+      <!-- <v-icon color="pink darken-1" class="mb-2 mr-1">mdi-fountain-pen-tip</v-icon>
+      <span class="headline font-weight-light" align="center">Wikis</span>
+      <v-divider class="my-4"></v-divider> -->
+      <div>
+        <v-icon left large color="blue lighten-1">mdi-rocket</v-icon>
+        <span class="font-weight-light">Still working on it :)</span>
+        <Progress />
+        <div align="center">Comming Soon</div>
+      </div>
     </div>
     <v-row>
-      <v-col columns="12" md="4" v-for="wiki in wikis" :key="wiki.id">
+      <!--v-col columns="12" md="4" v-for="wiki in wikis" :key="wiki.id">
         <v-card class="mx-auto">
           <v-img
             class="white--text align-end"
@@ -27,14 +32,17 @@
             <v-btn color="orange" class="mr-5 mb-2" text>Details</v-btn>
           </v-card-actions>
         </v-card>
-      </v-col>
+      </v-col-->
     </v-row>
   </div>
 </template>
 
 <script>
+import Progress from '@/components/layouts/Progress'
+
 export default {
   name: 'wikis',
+  components: { Progress },
   data() {
     return {
       wikis: [

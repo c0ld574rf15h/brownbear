@@ -7,6 +7,7 @@ import Signin from '@/components/auth/Signin'
 import Wikis from '@/components/wikis/Wikis'
 import Challenge from '@/components/challenge/Challenge'
 import LeaderBoard from '@/components/challenge/LeaderBoard'
+import ViewProfile from '@/components/layouts/ViewProfile'
 
 import firebase from 'firebase'
 
@@ -51,6 +52,14 @@ const routes = [
     path: '/leaderboard',
     name: 'leaderboard',
     component: LeaderBoard,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/profile/:id',
+    name: 'viewProfile',
+    component: ViewProfile,
     meta: {
       requiresAuth: true
     }

@@ -88,7 +88,7 @@ export default {
                   points: 0,
                   ladder: 'mint',
                   group: '',
-                  bio: '',
+                  bio: 'Another Random Brown Bear',
                   isAdmin: false
                 })
               }).then(() => this.$router.push({ name: 'dashboard' }))

@@ -24,8 +24,8 @@
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <v-divider class="mb-3"></v-divider>
-          <div>{{ challenge.description }}</div>
-          <div v-if="challenge.server_link" class="grey--text">
+          <div class="">{{ challenge.description }}</div>
+          <div v-if="challenge.server_link" class="grey--text mt-2">
             <v-icon small>mdi-send</v-icon>
             Connection to Server: {{ challenge.server_link }}
           </div>
@@ -45,7 +45,7 @@
             </v-alert>
           </div>
           <v-row class="px-3">
-            <span class="hints mt-1">
+            <span class="hints mt-1" v-if="challenge.references.length">
               <span>Hints:</span>
               <v-btn 
                 small outlined icon 
@@ -57,7 +57,7 @@
               </v-btn>
             </span>
             <v-spacer></v-spacer>
-            <v-btn text outlined color="indigo lighten-2">
+            <v-btn text outlined color="indigo lighten-2" v-if="challenge.binary_link.length">
               <v-icon left>mdi-rabbit</v-icon>
               Download Binary
             </v-btn>

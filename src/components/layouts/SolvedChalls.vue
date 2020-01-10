@@ -1,6 +1,6 @@
 <template>
   <div class="solved-challs mt-5" v-if="solved">
-    <v-list>
+    <v-list v-if="solved.length">
       <v-subheader class="black--text font-weight-light">
         Solved Challs
         <v-icon small color="red" class="ml-1">mdi-flag</v-icon>
@@ -11,7 +11,10 @@
           <v-list-item-title>
             <span>{{ chall.title }}</span>
             <v-chip :color="colors[chall.category]" dark small class="ml-2">{{ chall.category }}</v-chip>
-            <div class="grey--text mt-2">{{ chall.description }}</div>
+            <div class="grey--text my-2">
+              {{ chall.description.slice(0, Math.min(250, chall.description.length)) }}
+              {{ chall.description.length > 250 ? '...' : '' }}
+            </div>
           </v-list-item-title>
           <v-list-item-subtitle class="mt-1">
             <span>
@@ -22,6 +25,9 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
+    <div v-else>
+      <p>I think we're going to the moon because it's in the nature of the human being to face challenges. It's by the nature of his deep inner soul... we're required to do these things just as salmon swim upstream. <span class="grey--text">- Neil Armstrong</span></p>
+    </div>
   </div>
   <div v-else>
     <Progress />

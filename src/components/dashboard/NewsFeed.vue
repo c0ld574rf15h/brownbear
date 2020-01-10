@@ -15,7 +15,7 @@
           </v-list-item-title>
           <v-divider class="mt-2"></v-divider>
           <p class="grey--text text--darken-1 mt-3 newsfeed-content">
-            {{ notification.description.slice(0, Math.max(250, notification.description.length)) }}
+            {{ notification.description.slice(0, Math.min(250, notification.description.length)) }}
             {{ notification.description.length > 250 ? '...' : '' }}
           </p>
           <v-card-actions>
@@ -30,7 +30,7 @@
               <v-card>
                 <v-card-title>{{ not_title }}</v-card-title>
                 <v-divider></v-divider>
-                <v-card-text class="mt-3">{{ not_desc }}</v-card-text>
+                <v-card-text class="mt-3 body-1">{{ not_desc }}</v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn text class="mr-5 mb-5" color="indigo" @click="dialog=false">Close</v-btn>

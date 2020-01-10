@@ -9,14 +9,14 @@
           color="indigo lighten-2">
         </v-switch>
         <v-spacer></v-spacer>
-        <router-link :to="{ name: 'leaderboard' }">
+        <router-link :to="{ name: 'leaderboard' }" class="link">
           <v-btn dark depressed color="indigo lighten-2" class="mt-2">
             <v-icon left small>mdi-poll</v-icon>
             Leaderboard
           </v-btn>
         </router-link>
       </v-row>
-      <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos dolore saepe quidem illo soluta, reiciendis reprehenderit, optio rem magni iure ad! Rem tempora dignissimos rerum sint ullam doloremque maiores deleniti?</p>
+      <p>Debugging’s actually all about finding the bug, about understanding why the bug was there to begin with, about knowing that its existence was no accident. It came to you to deliver a message, like an unconscious bubble floating to the surface, popping with a revelation you’ve secretly known all along.</p>
     </div>
     <InHouse v-if="inhouse" />
   </div>
@@ -36,6 +36,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.link {
+  text-decoration: none;
+  color: inherit;
+}
 </style>

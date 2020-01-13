@@ -49,3 +49,15 @@ exports.addSolver = functions.https.onCall(data => {
     }
   })
 })
+
+exports.isAdmin = functions.https.onCall(data => {
+  const ref = admin.firestore().collection('users').where("user_id", "==", data.uid)
+  return ref.get().then(snapshot => {
+    const user = snapshot.docs[0].data()
+    if(user.isAdmin) {
+      return { res: true }
+    } else {
+      return { res: false }
+    }
+  })
+})

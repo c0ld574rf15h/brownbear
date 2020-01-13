@@ -2,11 +2,11 @@
   <div class="signin-page">
     <v-card outlined>
       <v-card-title class="font-weight-light">Log In</v-card-title>
-      <v-form @submit.prevent="signin" id="signin-form">
+      <v-form @submit.prevent="signIn" id="signin-form">
         <v-text-field
           required outlined v-model="email"
           class="mx-3 mb-2" label="Email"
-          color="brown" :rules="emailRules"></v-text-field>
+          color="brown"></v-text-field>
         <v-text-field
           required outlined v-model="password"
           class="mx-3 mb-2" label="Password" type="password"
@@ -25,7 +25,7 @@
           <v-spacer></v-spacer>
           <v-btn
           type="submit" dark text outlined class="ma-3 font-weight-light indigo lighten-3"
-          @click="signUp">Login</v-btn>
+          @click="signIn">Login</v-btn>
         </v-card-actions>
       </v-form>
     </v-card>
@@ -45,7 +45,7 @@ export default {
     }
   },
   methods: {
-    signin() {
+    signIn() {
       if(this.email && this.password) {
         firebase.auth().signInWithEmailAndPassword(this.email, this.password)
           .then(() => { this.$router.push({ name: 'dashboard' }) })

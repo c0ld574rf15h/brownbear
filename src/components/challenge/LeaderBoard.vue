@@ -6,7 +6,7 @@
       <v-divider class="my-4"></v-divider>
       <p class="font-weight-light">You should never view your challenges as a disadvantage. Instead, it's important for you to understand that your experience facing and overcoming adversity is actually one of your biggest advantages.</p>
     </div>
-    <v-list class="py-0">
+    <v-list class="py-0" v-if="items.length">
       <v-list-item-group color="grey darken-4">
         <v-list-item v-for="item in items" :key="item.user_id" inactive class="board-items">
           <v-list-item-content class="py-3">
@@ -33,14 +33,19 @@
         </v-list-item>
       </v-list-item-group>
     </v-list>
+    <div v-else>
+      <Progress />
+    </div>
   </div>
 </template>
 
 <script>
+import Progress from '@/components/layouts/Progress'
 import db from '@/firebase/init'
 
 export default {
   name: 'leaderboard',
+  components: { Progress },
   data() {
     return {
       colors: {

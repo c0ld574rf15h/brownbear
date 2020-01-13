@@ -4,9 +4,27 @@
     <v-row v-if="user.bio" class="mx-0">
       <span class="bio white--text py-1 px-3 mt-2">{{ user.bio.slice(0, 50) }}</span>
       <v-spacer></v-spacer>
-      <v-btn icon v-if="!isOwner">
-        <v-icon color="orange">mdi-pencil-outline</v-icon>
-      </v-btn>
+      <v-dialog v-model="dialog" v-if="isOwner" width="800">
+        <template v-slot:activator="{ on }">
+          <v-btn icon v-on="on">
+            <v-icon color="orange">mdi-pencil-outline</v-icon>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title>Edit Bio</v-card-title>
+          <v-form @submit.prevent="editBio">
+            <v-text-field class="px-5 font-weight-light" 
+                          label="Bio" color="orange darken-2" :value="user.bio">
+            </v-text-field>
+          </v-form>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn text @click="dialog = false">
+              Edit
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-row>
     <v-row v-else class="white--text mx-0">
       <span class="bio py-1 px-3 mt-2">You haven't set a bio yet</span>
@@ -34,7 +52,7 @@
     </v-row>
     <v-row class="grey--text mx-0" v-else>
       <span>Doesn't Belong to any Group</span>
-      <v-btn small icon v-if="!isOwner">
+      <v-btn small icon v-if="isOwner">
         <v-icon small color="orange">mdi-pencil-outline</v-icon>
       </v-btn>
     </v-row>
@@ -66,7 +84,8 @@ export default {
         'cherry': 'mdi-fruit-cherries'
       },
       user: null,
-      isOwner: false,
+      isOwner: true,
+      dialog: false
     }
   },
   created() {
@@ -74,6 +93,11 @@ export default {
       .then(snapShot => {
         this.user = snapShot.docs[0].data()
       })
+  },
+  methods: {
+    editBio() {
+      console.log('Edit Bio')
+    }
   }
 }
 </script>

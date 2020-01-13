@@ -8,6 +8,7 @@ import Wikis from '@/components/wikis/Wikis'
 import Challenge from '@/components/challenge/Challenge'
 import LeaderBoard from '@/components/challenge/LeaderBoard'
 import ViewProfile from '@/components/layouts/ViewProfile'
+import Upload from '@/components/challenge/Upload'
 
 import firebase from 'firebase'
 
@@ -63,6 +64,15 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/challenge/upload',
+    name: 'upload',
+    component: Upload,
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true
+    }
   }
 ]
 
@@ -72,8 +82,18 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  let user = firebase.auth().currentUser
+  if(to.matched.some(rec => rec.meta.requiresAdmin)) {
+    let isAdmin = firebase.functions().httpsCallable('isAdmin')
+    isAdmin({ uid: user.uid }).then(ret => {
+      if(ret.data.res) {
+        next()
+      } else {
+        next({ name: 'challenge' })
+      }
+    })
+  }
   if(to.matched.some(rec => rec.meta.requiresAuth)) {
-    let user = firebase.auth().currentUser
     if(user) {
       next()
     } else {

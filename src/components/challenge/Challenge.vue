@@ -9,6 +9,12 @@
           color="indigo lighten-2">
         </v-switch>
         <v-spacer></v-spacer>
+        <router-link :to="{ name: 'upload' }" class="link" v-if="isAdmin">
+          <v-btn text class="mt-2 mr-2">
+            <v-icon color="orange">mdi-plus</v-icon>
+            Upload Challenges
+          </v-btn>
+        </router-link>
         <router-link :to="{ name: 'leaderboard' }" class="link">
           <v-btn dark depressed color="indigo lighten-2" class="mt-2">
             <v-icon left small>mdi-poll</v-icon>
@@ -24,14 +30,26 @@
 
 <script>
 import InHouse from '@/components/challenge/InHouse'
+import firebase from 'firebase'
 
 export default {
   name: 'challenge',
   components: { InHouse },
   data() {
     return {
-      inhouse: true
+      inhouse: true,
+      isAdmin: false
     }
+  },
+  created() {
+    let isAdmin = firebase.functions().httpsCallable('isAdmin')
+    isAdmin({ uid: firebase.auth().currentUser.uid }).then(ret => {
+      if(ret.data.res) {
+        this.isAdmin = true
+      } else {
+        this.isAdmin = false
+      }
+    })
   }
 }
 </script>

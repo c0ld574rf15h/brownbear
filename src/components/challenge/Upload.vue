@@ -101,7 +101,7 @@ export default {
       const challFile = document.getElementById("chall-file")
       form.append('file', challFile.files[0])
 
-      axios.post('srv.cykor.kr:31337/challs/upload', form, {headers: {'Content-Type': 'multipart/form-data'}})
+      axios.post('https://srv.cykor.kr:31337/challs/upload', form, {headers: {'Content-Type': 'multipart/form-data'}})
         .then(res => {
           console.log(res)
         })

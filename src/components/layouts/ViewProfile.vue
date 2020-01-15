@@ -13,13 +13,13 @@
         <v-card>
           <v-card-title>Edit Bio</v-card-title>
           <v-form @submit.prevent="editBio">
-            <v-text-field class="px-5 font-weight-light" 
+            <v-text-field class="px-5 mx-2 font-weight-light" 
                           label="Bio" color="orange darken-2" :value="user.bio">
             </v-text-field>
           </v-form>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn text @click="dialog = false">
+            <v-btn class="mb-4 mr-5" text @click="dialog = false">
               Edit
             </v-btn>
           </v-card-actions>
@@ -29,7 +29,7 @@
     <v-row v-else class="white--text mx-0">
       <span class="bio py-1 px-3 mt-2">You haven't set a bio yet</span>
       <v-spacer></v-spacer>
-      <v-btn icon v-if="!isOwner">
+      <v-btn icon v-if="isOwner">
         <v-icon color="orange">mdi-pencil-outline</v-icon>
       </v-btn>
     </v-row>
@@ -46,7 +46,7 @@
     </v-row>
     <v-row class="grey--text mx-0" v-if="user.group">
       <span>Member of Group {{ user.group }}</span>
-      <v-btn small icon v-if="!isOwner">
+      <v-btn small icon v-if="isOwner">
         <v-icon small color="orange">mdi-pencil-outline</v-icon>
       </v-btn>
     </v-row>
@@ -56,6 +56,10 @@
         <v-icon small color="orange">mdi-pencil-outline</v-icon>
       </v-btn>
     </v-row>
+    <span class="green--text text--darken-2" v-if="user.isAdmin">
+      <v-icon color="green darken--2">mdi-check</v-icon>
+      Approved Admin User
+    </span>
     <SolvedChalls :user_id="user.user_id" />
   </div>
   <div v-else>
@@ -96,7 +100,7 @@ export default {
   },
   methods: {
     editBio() {
-      console.log('Edit Bio')
+      // Edit Bio From Frontend
     }
   }
 }

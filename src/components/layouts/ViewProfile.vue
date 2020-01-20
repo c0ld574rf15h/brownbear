@@ -14,24 +14,17 @@
           <v-card-title>Edit Bio</v-card-title>
           <v-form @submit.prevent="editBio">
             <v-text-field class="px-5 mx-2 font-weight-light" 
-                          label="Bio" color="orange darken-2" :value="user.bio">
+                          label="Bio" color="orange darken-2" v-model="bio">
             </v-text-field>
           </v-form>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn class="mb-4 mr-5" text @click="dialog = false">
+            <v-btn class="mb-4 mr-5" text @click="editBio">
               Edit
             </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-    </v-row>
-    <v-row v-else class="white--text mx-0">
-      <span class="bio py-1 px-3 mt-2">You haven't set a bio yet</span>
-      <v-spacer></v-spacer>
-      <v-btn icon v-if="isOwner">
-        <v-icon color="orange">mdi-pencil-outline</v-icon>
-      </v-btn>
     </v-row>
     <v-divider class="my-3"></v-divider>
     <v-row class="mx-0">
@@ -46,15 +39,51 @@
     </v-row>
     <v-row class="grey--text mx-0" v-if="user.group">
       <span>Member of Group {{ user.group }}</span>
-      <v-btn small icon v-if="isOwner">
-        <v-icon small color="orange">mdi-pencil-outline</v-icon>
-      </v-btn>
+      <v-dialog v-model="dialog_2" v-if="isOwner" width="500">
+        <template v-slot:activator="{ on }">
+          <v-btn small icon v-on="on">
+            <v-icon small color="orange">mdi-pencil-outline</v-icon>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title>Edit Group</v-card-title>
+          <v-form @submit.prevent="editGroup">
+            <v-text-field class="px-5 mx-2 font-weight-light" 
+                          label="Group" color="orange darken-2" v-model="group">
+            </v-text-field>
+          </v-form>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn class="mb-4 mr-5" text @click="editGroup">
+              Edit
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-row>
     <v-row class="grey--text mx-0" v-else>
       <span>Doesn't Belong to any Group</span>
-      <v-btn small icon v-if="isOwner">
-        <v-icon small color="orange">mdi-pencil-outline</v-icon>
-      </v-btn>
+      <v-dialog v-model="dialog_2" v-if="isOwner" width="500">
+        <template v-slot:activator="{ on }">
+          <v-btn small icon v-on="on">
+            <v-icon small color="orange">mdi-pencil-outline</v-icon>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title>Edit Group</v-card-title>
+          <v-form @submit.prevent="editGroup">
+            <v-text-field class="px-5 mx-2 font-weight-light" 
+                          label="Group" color="orange darken-2" v-model="group">
+            </v-text-field>
+          </v-form>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn class="mb-4 mr-5" text @click="editGroup">
+              Edit
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-row>
     <span class="green--text text--darken-2" v-if="user.isAdmin">
       <v-icon color="green darken--2">mdi-check</v-icon>
@@ -70,6 +99,7 @@
 <script>
 import Progress from '@/components/layouts/Progress'
 import db from '@/firebase/init'
+import firebase from 'firebase'
 import SolvedChalls from '@/components/layouts/SolvedChalls'
 
 export default {
@@ -88,19 +118,54 @@ export default {
         'cherry': 'mdi-fruit-cherries'
       },
       user: null,
-      isOwner: true,
-      dialog: false
+      isOwner: false,
+      dialog: false,
+      dialog_2: false,
+      bio: null,
+      group: null
+    }
+  },
+  watch: {
+    '$route.params.id': function() {
+      this.reRenderUser()
     }
   },
   created() {
-    db.collection('users').where('handle', '==', this.$route.params.id).get()
-      .then(snapShot => {
-        this.user = snapShot.docs[0].data()
-      })
+    this.reRenderUser()
   },
   methods: {
     editBio() {
-      // Edit Bio From Frontend
+      const ref = db.collection('users').doc(this.$route.params.id)
+      ref.update({ bio: this.bio }).then(() => {
+        this.dialog = false
+      })
+    },
+    editGroup() {
+      const ref = db.collection('users').doc(this.$route.params.id)
+      ref.update({ group: this.group }).then(() => {
+        this.dialog_2 = false
+      })
+    },
+    reRenderUser() {
+      const uid = firebase.auth().currentUser.uid
+      db.collection('users').where('user_id', '==', uid).get()
+        .then(snapShot => {
+          this.user = snapShot.docs[0].data()
+          if(this.user.handle == this.$route.params.id) {
+            this.isOwner = true
+          } else {
+            this.isOwner = false
+          }
+        })
+        .then(() => {
+          db.collection('users').where('handle', '==', this.$route.params.id).get()
+            .then(snapShot => {
+              this.user = snapShot.docs[0].data()
+              console.log(this.user)
+              this.bio = this.user.bio
+              this.group = this.user.group
+            })
+        })
     }
   }
 }

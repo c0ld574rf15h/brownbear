@@ -6,12 +6,14 @@
       <v-divider class="my-4"></v-divider>
       <p class="font-weight-light">This page is only open for users who have admin privileges. The upload scheme utilizes the papaWhaled library(API). Special Thanks to hhro</p>
     </div>
-    <v-card fluid class="px-5 pb-5" id="upload-card">
+    <v-card fluid class="px-5 pb-5" id="upload-card" :loading="loading">
       <v-container>
-        <div class='mx-5 mt-2 mb-0'>
+        <v-row class='mx-5 mt-2 mb-0'>
           <v-switch v-model="switch_1" :label="`${ switch_1 ? 'Auto' : 'Custom Docker' }`" class="mx-5 mt-0">
           </v-switch>
-        </div>
+          <v-switch v-model="contest_switch" :label="`${ contest_switch ? 'Contest' : 'General' }`" class="mx-5 mt-0">
+          </v-switch>
+        </v-row>
         <v-divider></v-divider>
         <v-row>
           <v-col cols="12" md="4">
@@ -41,12 +43,18 @@
         </v-row>
         <div class="mx-5">
           <v-text-field label="Name" dense outlined class="mx-5 font-weight-light" v-model="name"></v-text-field>
+          <v-text-field label="Points" dense outlined class="mx-5 font-weight-light" v-model="points"></v-text-field>
+          <v-text-field label="Category" dense outlined class="mx-5 font-weight-light" v-model="category"
+          hint="Choose 1 among pwn, web, forensics, crypto, misc" persistent-hint></v-text-field>
+          <v-textarea label="Description" height="100" no-resize outlined class="mx-5 font-weight-light" v-model="description"></v-textarea>
           <v-text-field label="Flag" dense outlined class="mx-5 font-weight-light" v-model="flag" @change="flagChange" :hint="`Hashed Flag : ${flagHash}`" persistent-hint></v-text-field>
           <div>
             <v-switch v-model="switch_2" :label="`${ switch_2 ? 'Auto Select Port' : 'Manually Select Port' }`" class="mx-5 mt-0"></v-switch>
             <v-text-field label="Port Number" dense outlined :disabled="switch_2" class="mx-5" v-model="port"></v-text-field>
             <v-file-input label="Challenge File (chall.zip)" outlined dense class="mx-5" id="chall-file"></v-file-input>
             <v-file-input label="Docker File" outlined dense class="mx-5" :disabled="!switch_1"></v-file-input>
+            <v-text-field label="Server Link" dense outlined class="mx-5 font-weight-light" v-model="server_link"></v-text-field>
+            <v-text-field label="Binary Link" dense outlined class="mx-5 font-weight-light" v-model="binary_link"></v-text-field>
           </div>
         </div>
         <v-row class="mr-5">
@@ -55,12 +63,25 @@
         </v-row>
       </v-container>
     </v-card>
+    <v-snackbar v-model="snackbar">
+      Successfully Uploaded Challenge
+      <v-btn color="green" text @click="snackbar=false">
+        Close
+      </v-btn>
+    </v-snackbar>
+    <v-snackbar v-model="error">
+      Something got wrong
+      <v-btn color="red" text @click="error=false">
+        Close
+      </v-btn>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import sha256 from 'js-sha256'
+import db from '@/firebase/init'
 
 export default {
   name: 'upload',
@@ -74,14 +95,24 @@ export default {
       select_3: ['16.04', '18.04'],
       switch_1: true,
       switch_2: true,
+      contest_switch: true,
       flag: null,
       flagHash: null,
       name: null,
-      port: null
+      points: null,
+      category: null,
+      description: null,
+      port: null,
+      server_link: null,
+      binary_link: null,
+      loading: false,
+      snackbar: false,
+      error: false
     }
   },
   methods: {
     uploadChallenge() {
+      this.loading = true
       let form = new FormData()
       if(this.switch_1) {
         form.append('chal-type', 'auto')
@@ -101,11 +132,37 @@ export default {
       const challFile = document.getElementById("chall-file")
       form.append('file', challFile.files[0])
 
-      axios.post('https://srv.cykor.kr:31337/challs/upload', form, {headers: {'Content-Type': 'multipart/form-data'}})
+      axios.post('https://srv.cykor.kr:31337/challs/upload', form, 
+        {headers: {'Content-Type': 'multipart/form-data'}})
         .then(res => {
-          console.log(res)
+          if(res.status == 200) {
+            let isInHouse = false
+            if(this.radioGroup_1 == 'In House') {
+              isInHouse = true
+            }
+            const ref = db.collection('challenges').doc(this.name)
+            ref.set({
+              category: this.category,
+              contest: this.contest_switch,
+              description: this.description,
+              flag: sha256(this.flag),
+              inhouse: isInHouse,
+              points: Number(this.points),
+              server_link: this.server_link,
+              binary_link: this.binary_link,
+              solvers: 0,
+              title: this.name
+            }).then(() => {
+              this.snackbar = true
+              this.loading = false
+            })
+          } else {
+            this.loading = false
+            this.error = true
+          }
         })
         .catch(err => {
+          this.loading = false
           console.log(err)
         })
       

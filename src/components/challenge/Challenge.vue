@@ -44,7 +44,8 @@ export default {
     }
   },
   created() {
-    let isAdmin = firebase.functions().httpsCallable('isAdmin')
+    const functions = firebase.app().functions('asia-northeast1')
+    let isAdmin = functions.httpsCallable('isAdmin')
     isAdmin({ uid: firebase.auth().currentUser.uid }).then(ret => {
       if(ret.data.res) {
         this.isAdmin = true

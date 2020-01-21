@@ -5,7 +5,7 @@ admin.initializeApp()
 
 const cors = require('cors')({origin: true});
 
-exports.checkFlag = functions.https.onCall(data => {
+exports.checkFlag = functions.region('asia-northeast1').https.onCall(data => {
   const ref = admin.firestore().collection('challenges').doc(data.chall_id)
   return ref.get().then(snapshot => {
     if(!snapshot.exists) {
@@ -21,7 +21,7 @@ exports.checkFlag = functions.https.onCall(data => {
   })
 })
 
-exports.newSolve = functions.https.onCall(data => {
+exports.newSolve = functions.region('asia-northeast1').https.onCall(data => {
   const ref = admin.firestore().collection('challenges').doc(data.chall_id)
   return ref.update({
     solvers: admin.firestore.FieldValue.increment(1)
@@ -32,7 +32,7 @@ exports.newSolve = functions.https.onCall(data => {
   })
 })
 
-exports.addSolver = functions.https.onCall(data => {
+exports.addSolver = functions.region('asia-northeast1').https.onCall(data => {
   const ref = admin.firestore().collection('solved').doc(data.doc_id)
   return ref.get().then(doc => {
     if(doc.exists) {
@@ -50,7 +50,7 @@ exports.addSolver = functions.https.onCall(data => {
   })
 })
 
-exports.isAdmin = functions.https.onCall(data => {
+exports.isAdmin = functions.region('asia-northeast1').https.onCall(data => {
   const ref = admin.firestore().collection('users').where("user_id", "==", data.uid)
   return ref.get().then(snapshot => {
     const user = snapshot.docs[0].data()

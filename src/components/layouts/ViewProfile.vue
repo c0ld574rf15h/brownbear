@@ -89,7 +89,7 @@
       <v-icon color="green darken--2">mdi-check</v-icon>
       Approved Admin User
     </span>
-    <SolvedChalls :user_id="user.user_id" />
+    <SolvedChalls :user_id="user.user_id" :key="user.user_id" />
   </div>
   <div v-else>
     <Progress class="mt-5" />
@@ -161,7 +161,6 @@ export default {
           db.collection('users').where('handle', '==', this.$route.params.id).get()
             .then(snapShot => {
               this.user = snapShot.docs[0].data()
-              console.log(this.user)
               this.bio = this.user.bio
               this.group = this.user.group
             })

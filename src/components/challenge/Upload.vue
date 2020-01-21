@@ -52,7 +52,7 @@
             <v-switch v-model="switch_2" :label="`${ switch_2 ? 'Auto Select Port' : 'Manually Select Port' }`" class="mx-5 mt-0"></v-switch>
             <v-text-field label="Port Number" dense outlined :disabled="switch_2" class="mx-5" v-model="port"></v-text-field>
             <v-file-input label="Challenge File (chall.zip)" outlined dense class="mx-5" id="chall-file"></v-file-input>
-            <v-file-input label="Docker File" outlined dense class="mx-5" :disabled="!switch_1"></v-file-input>
+            <v-file-input label="Docker File" outlined dense class="mx-5" :disabled="switch_1"></v-file-input>
             <v-text-field label="Server Link" dense outlined class="mx-5 font-weight-light" v-model="server_link"></v-text-field>
             <v-text-field label="Binary Link" dense outlined class="mx-5 font-weight-light" v-model="binary_link"></v-text-field>
           </div>

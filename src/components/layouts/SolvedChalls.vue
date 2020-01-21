@@ -1,6 +1,6 @@
 <template>
   <div class="solved-challs mt-5" v-if="solved">
-    <v-list v-if="solved.length">
+    <v-list v-if="solved.length" two-line>
       <v-subheader class="black--text font-weight-light">
         Solved Challs
         <v-icon small color="red" class="ml-1">mdi-flag</v-icon>
@@ -11,15 +11,13 @@
           <v-list-item-title>
             <span>{{ chall.title }}</span>
             <v-chip :color="colors[chall.category]" dark small class="ml-2">{{ chall.category }}</v-chip>
-            <div class="grey--text my-2">
-              {{ chall.description.slice(0, Math.min(250, chall.description.length)) }}
-              {{ chall.description.length > 250 ? '...' : '' }}
-            </div>
           </v-list-item-title>
           <v-list-item-subtitle class="mt-1">
             <span>
               <v-icon small color="yellow darken-1" class="mr-1">mdi-diamond</v-icon>
               <span class="font-weight-bold black--text">{{ chall.points }}</span> Points
+              <v-icon small color="green" class="ml-2">mdi-check</v-icon>
+              <span class="font-weight-bold black--text">{{ chall.solvers }}</span> Solvers
             </span>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -54,8 +52,9 @@ export default {
       solved: []
     }
   },
-  created() {
-    db.collection('solved').where('user', '==', this.$props.user_id).get()
+  methods: {
+    getSolved() {
+      db.collection('solved').where('user', '==', this.$props.user_id).get()
       .then(snapShot => {
         snapShot.forEach(doc => {
           db.collection('challenges').doc(doc.data().chall).get()
@@ -66,10 +65,16 @@ export default {
             })
         })
       })
+    }
+  },
+  created() {
+    this.getSolved()
   }
 }
 </script>
 
 <style>
-
+div.solved-challs {
+  min-width: 1000px;
+}
 </style>

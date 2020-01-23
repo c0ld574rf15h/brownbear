@@ -105,14 +105,16 @@ export default {
     submit_flag(chall) {
       this.loading = "primary"
       this.alert = false
-      let checkFlag = firebase.functions().httpsCallable('checkFlag')
+
+      const functions = firebase.app().functions('asia-northeast1')
+      let checkFlag = functions.httpsCallable('checkFlag')
       checkFlag({ flag: this.input_flag, chall_id: chall.id })
         .then(res => {
           if(res.data.correct) {
-            let newSolve = firebase.functions().httpsCallable('newSolve')
+            let newSolve = functions.httpsCallable('newSolve')
             newSolve({ chall_id: chall.id, chall_point: chall.points, user_handle: this.profile })
               .then(() => {
-                let addSolver = firebase.functions().httpsCallable('addSolver')
+                let addSolver = functions.httpsCallable('addSolver')
                 const user = firebase.auth().currentUser
                 addSolver({ user_id: user.uid, chall_id: chall.id, doc_id: user.uid+':'+chall.id })
                   .then(res => {

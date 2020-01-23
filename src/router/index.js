@@ -84,7 +84,8 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   let user = firebase.auth().currentUser
   if(to.matched.some(rec => rec.meta.requiresAdmin)) {
-    let isAdmin = firebase.functions().httpsCallable('isAdmin')
+    const functions = firebase.app().functions('asia-northeast1')
+    let isAdmin = functions.httpsCallable('isAdmin')
     isAdmin({ uid: user.uid }).then(ret => {
       if(ret.data.res) {
         next()

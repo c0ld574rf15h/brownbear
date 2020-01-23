@@ -53,8 +53,6 @@
             <v-text-field label="Port Number" dense outlined :disabled="switch_2" class="mx-5" v-model="port"></v-text-field>
             <v-file-input label="Challenge File (chall.zip)" outlined dense class="mx-5" id="chall-file"></v-file-input>
             <v-file-input label="Docker File" outlined dense class="mx-5" :disabled="switch_1" id="docker-file"></v-file-input>
-            <v-text-field label="Server Link" dense outlined class="mx-5 font-weight-light" v-model="server_link"></v-text-field>
-            <v-text-field label="Binary Link" dense outlined class="mx-5 font-weight-light" v-model="binary_link"></v-text-field>
           </div>
         </div>
         <v-row class="mr-5">
@@ -95,7 +93,7 @@ export default {
       select_3: ['16.04', '18.04'],
       switch_1: true,
       switch_2: true,
-      contest_switch: true,
+      contest_switch: false,
       flag: null,
       flagHash: null,
       name: null,
@@ -103,8 +101,9 @@ export default {
       category: null,
       description: null,
       port: null,
-      server_link: null,
-      binary_link: null,
+      server_link: "",
+      binary_link: "",
+      references: [],
       loading: false,
       snackbar: false,
       error: false
@@ -137,39 +136,61 @@ export default {
         form.append('dockerfile', dockerFile.files[0])
       }
 
-      axios.post('https://srv.cykor.kr:31337/challs/upload', form, 
-        {headers: {'Content-Type': 'multipart/form-data'}})
-        .then(res => {
-          if(res.status == 200) {
-            let isInHouse = false
-            if(this.radioGroup_1 == 'In House') {
-              isInHouse = true
-            }
-            const ref = db.collection('challenges').doc(this.name)
-            ref.set({
-              category: this.category,
-              contest: this.contest_switch,
-              description: this.description,
-              flag: sha256(this.flag),
-              inhouse: isInHouse,
-              points: Number(this.points),
-              server_link: this.server_link,
-              binary_link: this.binary_link,
-              solvers: 0,
-              title: this.name
-            }).then(() => {
-              this.snackbar = true
-              this.loading = false
-            })
-          } else {
-            this.loading = false
-            this.error = true
-          }
-        })
-        .catch(err => {
+      if(this.radioGroup_1 == 'In House') {
+        const ref = db.collection('challenges').doc(this.name)
+        ref.set({
+          category: this.category,
+          contest: this.contest_switch,
+          description: this.description,
+          flag: sha256(this.flag),
+          inhouse: true,
+          points: Number(this.points),
+          server_link: this.server_link,
+          binary_link: this.binary_link,
+          solvers: 0,
+          title: this.name,
+          references: []
+        }).then(() => {
+          this.snackbar = true
           this.loading = false
+        }).catch(err => {
+          this.loading = false
+          this.error = true
           console.log(err)
         })
+      } else {
+        axios.post('https://srv.cykor.kr:31337/challs/upload', form, 
+          {headers: {'Content-Type': 'multipart/form-data'}})
+          .then(res => {
+            if(res.status == 200) {
+              const ref = db.collection('challenges').doc(this.name)
+              ref.set({
+                category: this.category,
+                contest: this.contest_switch,
+                description: this.description,
+                flag: sha256(this.flag),
+                inhouse: false,
+                points: Number(this.points),
+                server_link: "srv.cykor.kr " + res.port,
+                binary_link: "https://srv.cykor.kr:31337/challs/download/"+this.name,
+                solvers: 0,
+                title: this.name
+              }).then(() => {
+                this.snackbar = true
+                this.loading = false
+              })
+            } else {
+              this.loading = false
+              this.error = true
+            }
+          })
+          .catch(err => {
+            this.loading = false
+            console.log(err)
+          })
+      }
+
+
       
     },
     flagChange() {

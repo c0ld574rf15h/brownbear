@@ -67,7 +67,7 @@
     </v-expansion-panels>
     <Progress v-else />
     <v-snackbar v-model="snackbar">
-      Congradulations
+      Congradulations!
       <v-btn color="green" text @click="snackbar=false">
         Close
       </v-btn>
@@ -123,6 +123,7 @@ export default {
                       this.input_flag = ""
                       this.snackbar = true
                       chall.solved = true
+                      chall.solvers += 1
                     } else {
                       this.loading = false
                       this.input_flag = "Don't try something woopy"

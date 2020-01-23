@@ -171,7 +171,7 @@ export default {
                 flag: sha256(this.flag),
                 inhouse: false,
                 points: Number(this.points),
-                server_link: "srv.cykor.kr " + res.port,
+                server_link: "srv.cykor.kr " + res.data.port,
                 binary_link: "https://srv.cykor.kr:31337/challs/download/"+this.name,
                 solvers: 0,
                 title: this.name

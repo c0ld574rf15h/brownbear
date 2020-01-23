@@ -57,10 +57,12 @@
               </v-btn>
             </span>
             <v-spacer></v-spacer>
-            <v-btn text outlined color="indigo lighten-2" v-if="challenge.binary_link">
-              <v-icon left>mdi-rabbit</v-icon>
-              Download Binary
-            </v-btn>
+            <a :href="challenge.binary_link" class="link">
+              <v-btn text outlined color="indigo lighten-2" v-if="challenge.binary_link">
+                <v-icon left>mdi-rabbit</v-icon>
+                Download Binary
+              </v-btn>
+            </a>
           </v-row>
         </v-expansion-panel-content>
       </v-expansion-panel>
@@ -122,6 +124,8 @@ export default {
                       this.loading = false
                       this.input_flag = ""
                       this.snackbar = true
+                      chall.solved = true
+                      chall.solvers += 1
                     } else {
                       this.loading = false
                       this.input_flag = "Don't try something woopy"

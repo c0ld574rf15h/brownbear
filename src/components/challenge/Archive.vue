@@ -29,6 +29,10 @@
             <v-icon small>mdi-send</v-icon>
             Connection to Server: {{ challenge.server_link }}
           </div>
+          <div v-if="challenge.from" class="grey--text mt-2">
+            <v-icon small>mdi-swap-vertical-bold</v-icon>
+            From <span class="grey--text text--darken-3">{{ challenge.from }}</span>
+          </div>
           <div class="mt-5">
             <v-form @submit.prevent="submit_flag(challenge)" v-if="!challenge.solved">
               <v-text-field 

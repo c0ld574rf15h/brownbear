@@ -53,6 +53,7 @@
             <v-text-field label="Port Number" dense outlined :disabled="switch_2" class="mx-5" v-model="port"></v-text-field>
             <v-file-input label="Challenge File (chall.zip)" outlined dense class="mx-5" id="chall-file"></v-file-input>
             <v-file-input label="Docker File" outlined dense class="mx-5" :disabled="switch_1" id="docker-file"></v-file-input>
+            <v-text-field label="From" dense outlined class="mx-5 font-weight-light" v-model="from"></v-text-field>
           </div>
         </div>
         <v-row class="mr-5">
@@ -103,6 +104,7 @@ export default {
       port: null,
       server_link: "",
       binary_link: "",
+      from: "",
       references: [],
       loading: false,
       snackbar: false,
@@ -149,7 +151,8 @@ export default {
           binary_link: this.binary_link,
           solvers: 0,
           title: this.name,
-          references: []
+          references: [],
+          from: this.from
         }).then(() => {
           this.snackbar = true
           this.loading = false

@@ -121,8 +121,7 @@ export default {
             newSolve({ chall_id: chall.id, chall_point: chall.points, user_handle: this.profile })
               .then(() => {
                 let addSolver = functions.httpsCallable('addSolver')
-                const user = firebase.auth().currentUser
-                addSolver({ user_id: user.uid, chall_id: chall.id, doc_id: user.uid+':'+chall.id })
+                addSolver({ user_handle: this.profile, chall_id: chall.id, doc_id: this.profile+':'+chall.id })
                   .then(res => {
                     if(!res.malicious) {
                       this.loading = false
@@ -144,23 +143,23 @@ export default {
     }
   },
   created() {
-    db.collection('solved').where("user", "==", firebase.auth().currentUser.uid).get()
+    db.collection('users').where("user_id", "==", firebase.auth().currentUser.uid).get()
       .then(snapshot => {
-        snapshot.forEach(doc => {
-          this.solved_challs.push(doc.data().chall)
-        })
+        this.profile = snapshot.docs[0].data().handle
       })
       .then(() => {
-        db.collection('users').where("user_id", "==", firebase.auth().currentUser.uid).get()
+        db.collection('solved').where("user", "==", this.profile).get()
           .then(snapshot => {
-            this.profile = snapshot.docs[0].data().handle
+            snapshot.forEach(doc => {
+              this.solved_challs.push(doc.data().chall)
+            })
           })
       })
       .then(() => {
         db.collection("challenges").orderBy("points").get()
           .then(snapshot => {
             snapshot.forEach(doc => {
-              if(doc.data().inhouse == false) {
+              if(!doc.data().inhouse) {
                 let chall = doc.data()
                 chall.id = doc.id
                 if(this.solved_challs.includes(chall.id)) {
@@ -169,7 +168,6 @@ export default {
                   chall.solved = false
                 }
                 this.challenges.push(chall)
-                console.log(this.challenges)
               }
             })
           })

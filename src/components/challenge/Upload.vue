@@ -177,7 +177,8 @@ export default {
                 server_link: "srv.cykor.kr " + res.data.port,
                 binary_link: "https://srv.cykor.kr:31337/challs/download/"+this.name,
                 solvers: 0,
-                title: this.name
+                title: this.name,
+                from: this.from
               }).then(() => {
                 this.snackbar = true
                 this.loading = false

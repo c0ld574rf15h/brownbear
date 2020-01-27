@@ -46,7 +46,6 @@
 <script>
 import db from '@/firebase/init'
 import firebase from 'firebase'
-import slugify from 'slugify'
 
 export default {
   name: 'signup',
@@ -56,7 +55,6 @@ export default {
       email: '',
       handle: '',
       password: '',
-      slug: '',
       handleRules: [
         v => !!v || 'Please enter your handle',
         v => (v && v.length <= 12) || 'Your handle cannot exceed 12 characters'
@@ -70,12 +68,7 @@ export default {
   methods: {
     signUp() {
       if(this.email && this.handle && this.password) {
-        this.slug = slugify(this.handle, {
-          replacement: '-',
-          remove: /[!@#$%^&*()_+'"]/g,
-          lower: true
-        })
-        let ref = db.collection('users').doc(this.slug)
+        let ref = db.collection('users').doc(this.handle)
         ref.get().then(doc => {
           if(doc.exists) {
             this.feedback = 'Sorry, this handle has been already taken'

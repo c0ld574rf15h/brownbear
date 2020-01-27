@@ -39,7 +39,7 @@ import Progress from '@/components/layouts/Progress'
 export default {
   name: 'solvedChalls',
   components: { Progress },
-  props: [ 'user_id' ],
+  props: [ 'userHandle' ],
   data() {
     return {
       colors: {
@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     getSolved() {
-      db.collection('solved').where('user', '==', this.$props.user_id).get()
+      db.collection('solved').where('user', '==', this.$props.userHandle).get()
       .then(snapShot => {
         snapShot.forEach(doc => {
           db.collection('challenges').doc(doc.data().chall).get()

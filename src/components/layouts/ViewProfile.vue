@@ -89,7 +89,7 @@
       <v-icon color="green darken--2">mdi-check</v-icon>
       Approved Admin User
     </span>
-    <SolvedChalls :user_id="user.user_id" :key="user.user_id" />
+    <SolvedChalls :userHandle="user.handle" :key="user.handle" />
   </div>
   <div v-else>
     <Progress class="mt-5" />

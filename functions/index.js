@@ -28,7 +28,7 @@ exports.newSolve = functions.region('asia-northeast1').https.onCall(data => {
   }).then(() => {
     admin.firestore().collection('users').doc(data.user_handle).update({
       points: admin.firestore.FieldValue.increment(data.chall_point)
-    })
+    }).catch(err => console.log(err))
   })
 })
 
@@ -36,15 +36,13 @@ exports.addSolver = functions.region('asia-northeast1').https.onCall(data => {
   const ref = admin.firestore().collection('solved').doc(data.doc_id)
   return ref.get().then(doc => {
     if(doc.exists) {
-      return { malicious: true }
+      return {
+        malicious: true
+      }
     } else {
       ref.set({
-        user: data.user_id,
+        user: data.user_handle,
         chall: data.chall_id
-      }).then(() => {
-        console.log('Add Solver Success')
-      }).catch(err => {
-        console.log(err)
       })
     }
   })

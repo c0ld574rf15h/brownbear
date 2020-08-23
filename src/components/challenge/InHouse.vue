@@ -117,23 +117,21 @@ export default {
       checkFlag({ flag: this.input_flag, chall_id: chall.id })
         .then(res => {
           if(res.data.correct) {
-            let newSolve = functions.httpsCallable('newSolve')
-            newSolve({ chall_id: chall.id, chall_point: chall.points, user_handle: this.profile })
-              .then(() => {
-                let addSolver = functions.httpsCallable('addSolver')
-                addSolver({ user_handle: this.profile, chall_id: chall.id, doc_id: this.profile+':'+chall.id })
-                  .then(res => {
-                    if(!res.malicious) {
-                      this.loading = false
-                      this.input_flag = ""
-                      this.snackbar = true
-                      chall.solved = true
-                      chall.solvers += 1
-                    } else {
-                      this.loading = false
-                      this.input_flag = "Don't try something woopy"
-                    }
-                  })
+            let addSolver = functions.httpsCallable('addSolver')
+            addSolver({ user_handle: this.profile, chall_id: chall.id, doc_id: this.profile+':'+chall.id })
+              .then(res => {
+                if(!res.malicious) {
+                  this.loading = false
+                  this.input_flag = ""
+                  this.snackbar = true
+                  chall.solved = true
+                  chall.solvers += 1
+                  let newSolve = functions.httpsCallable('newSolve')
+                  newSolve({ user_handle: this.profile, chall_id: chall.id, })
+                } else {
+                  this.loading = false
+                  this.input_flag = "Don't try something woopy"
+                }
               })
           } else {
             this.loading = false

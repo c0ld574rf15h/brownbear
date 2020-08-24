@@ -172,11 +172,8 @@ export default {
           })
           db.collection("challenges").orderBy("points").get()
           .then(snapshot => {
-            for (let doc in snapshot) {
+            snapshot.forEach(doc => {
               let chall = doc.data()
-              if(chall.category === 'pwn' || chall.category === 'web') {
-                if(!challtitles.includes(chall.title)) continue
-              }
               if(!chall.inhouse) {
                 chall.id = doc.id
                 if(this.solved_challs.includes(chall.id)) {
@@ -184,9 +181,11 @@ export default {
                 } else {
                   chall.solved = false
                 }
-                this.challenges.push(chall)
+                if(chall.category === 'pwn' || chall.category === 'web') {
+                  if(challtitles.includes(chall.title)) this.challenges.push(chall)   
+                } else this.challenges.push(chall) 
               }
-            }
+            })
           })
         })
       })

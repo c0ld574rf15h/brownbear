@@ -172,26 +172,27 @@ export default {
           })
           db.collection("challenges").orderBy("points").get()
           .then(snapshot => {
-            snapshot.forEach(doc => {
+            for (let doc in snapshot) {
               let chall = doc.data()
-              if(challtitles.includes(chall.title)) {
-                if(!chall.inhouse) {
-                  chall.id = doc.id
-                  if(this.solved_challs.includes(chall.id)) {
-                    chall.solved = true
-                  } else {
-                    chall.solved = false
-                  }
-                  this.challenges.push(chall)
-                }
+              if(chall.category === 'pwn' || chall.category === 'web') {
+                if(!challtitles.includes(chall.title)) continue
               }
-            })
+              if(!chall.inhouse) {
+                chall.id = doc.id
+                if(this.solved_challs.includes(chall.id)) {
+                  chall.solved = true
+                } else {
+                  chall.solved = false
+                }
+                this.challenges.push(chall)
+              }
+            }
           })
         })
-        
-        
-        
       })
+        
+        
+        
   }
 }
 </script>

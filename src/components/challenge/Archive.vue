@@ -25,9 +25,17 @@
         <v-expansion-panel-content>
           <v-divider class="mb-3"></v-divider>
           <div class="">{{ challenge.description }}</div>
-          <div v-if="challenge.server_link" class="grey--text mt-2">
-            <v-icon small>mdi-send</v-icon>
-            Connection to Server: {{ challenge.server_link }}
+          <div v-if="challenge.category === 'web'">
+            <div v-if="challenge.server_link" class="grey--text mt-2">
+              <v-icon small>mdi-send</v-icon>
+              Challenge URL: <a>{{ challenge.server_link }}</a>
+            </div>
+          </div>
+          <div v-else>
+            <div v-if="challenge.server_link" class="grey--text mt-2">
+              <v-icon small>mdi-send</v-icon>
+              Connection to Server: {{ challenge.server_link }}
+            </div>
           </div>
           <div v-if="challenge.from" class="grey--text mt-2">
             <v-icon small>mdi-swap-vertical-bold</v-icon>
@@ -64,7 +72,7 @@
             <a :href="challenge.binary_link" class="link">
               <v-btn text outlined color="indigo lighten-2" v-if="challenge.binary_link">
                 <v-icon left>mdi-rabbit</v-icon>
-                Download Binary
+                Download File
               </v-btn>
             </a>
           </v-row>
@@ -82,6 +90,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import db from '@/firebase/init'
 import Progress from '@/components/layouts/Progress'
 import firebase from 'firebase'
@@ -94,6 +103,7 @@ export default {
       colors: {
         'pwn': 'red lighten-2',
         'web': 'purple lighten-2',
+        'rev': 'blue lighten-2',
         'forensics': 'indigo ligten-2',
         'crypto': 'pink lighten-2',
         'misc': 'green lighten-2',
@@ -154,22 +164,34 @@ export default {
           })
       })
       .then(() => {
-        db.collection("challenges").orderBy("points").get()
+        axios.get("https://srv.cykor.kr:31337/challs")
+        .then(res => {
+          let challtitles = []
+          res.data.forEach(chall => {
+            challtitles.push(chall.name)
+          })
+          db.collection("challenges").orderBy("points").get()
           .then(snapshot => {
             snapshot.forEach(doc => {
-              if(!doc.data().inhouse) {
-                let chall = doc.data()
+              let chall = doc.data()
+              if(!chall.inhouse) {
                 chall.id = doc.id
                 if(this.solved_challs.includes(chall.id)) {
                   chall.solved = true
                 } else {
                   chall.solved = false
                 }
-                this.challenges.push(chall)
+                if(chall.category === 'pwn' || chall.category === 'web') {
+                  if(challtitles.includes(chall.title)) this.challenges.push(chall)   
+                } else this.challenges.push(chall) 
               }
             })
           })
+        })
       })
+        
+        
+        
   }
 }
 </script>

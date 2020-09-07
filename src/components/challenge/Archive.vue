@@ -28,7 +28,11 @@
           <div v-if="challenge.category === 'web'">
             <div v-if="challenge.server_link" class="grey--text mt-2">
               <v-icon small>mdi-send</v-icon>
+<<<<<<< HEAD
               Challenge URL: <a v-bind:href="challenge.server_link">{{ challenge.server_link }}</a>
+=======
+              Challenge URL: <a>{{ challenge.server_link }}</a>
+>>>>>>> fc206d2828b1b0fd335e0a502c963426263e727f
             </div>
           </div>
           <div v-else>
@@ -94,7 +98,10 @@
 import db from '@/firebase/init'
 import Progress from '@/components/layouts/Progress'
 import firebase from 'firebase'
+<<<<<<< HEAD
 import axios from 'axios'
+=======
+>>>>>>> fc206d2828b1b0fd335e0a502c963426263e727f
 
 export default {
   name: 'archive-challenge',
@@ -164,6 +171,7 @@ export default {
           })
       })
       .then(() => {
+<<<<<<< HEAD
         axios.get("https://srv.cykor.kr:31337/challs")
         .then(res => {
           let challtitles = []
@@ -189,6 +197,37 @@ export default {
           })
         })
 
+=======
+        db.collection("challenges").orderBy("points").get()
+          .then(snapshot => {
+            axios.get("https://srv.cykor.kr:31337/challs")
+            .then(res => {
+              let challtitles = []
+              res.data.forEach(chall => {
+                challtitles.push(chall.name)
+              })
+              db.collection("challenges").orderBy("points").get()
+              .then(snapshot => {
+                snapshot.forEach(doc => {
+                  let chall = doc.data()
+                  if(!chall.inhouse) {
+                    chall.id = doc.id
+                    if(this.solved_challs.includes(chall.id)) {
+                      chall.solved = true
+                    } else {
+                      chall.solved = false
+                    }
+                    if(chall.category === 'pwn' || chall.category === 'web') {
+                      if(challtitles.includes(chall.title)) this.challenges.push(chall)   
+                    } else this.challenges.push(chall) 
+                  }
+                })
+              })
+            })
+          })
+
+          
+>>>>>>> fc206d2828b1b0fd335e0a502c963426263e727f
       })
         
         

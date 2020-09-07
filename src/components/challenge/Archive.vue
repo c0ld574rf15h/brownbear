@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+//import axios from 'axios'
 import db from '@/firebase/init'
 import Progress from '@/components/layouts/Progress'
 import firebase from 'firebase'
@@ -121,7 +121,6 @@ export default {
     submit_flag(chall) {
       this.loading = "primary"
       this.alert = false
-
       const functions = firebase.app().functions('asia-northeast1')
       let checkFlag = functions.httpsCallable('checkFlag')
       checkFlag({ flag: this.input_flag, chall_id: chall.id })
@@ -136,8 +135,8 @@ export default {
                   this.snackbar = true
                   chall.solved = true
                   chall.solvers += 1
-                  let newSolve = functions.httpsCallable('newSolve')
-                  newSolve({ user_handle: this.profile, chall_id: chall.id })
+                  let updateSolve = functions.httpsCallable('updateSolve')
+                  updateSolve({ user_handle: this.profile, chall_id: chall.id })
               } else {
                   this.loading = false
                   this.input_flag = "Don't try something woopy"
@@ -164,30 +163,35 @@ export default {
           })
       })
       .then(() => {
-        axios.get("https://srv.cykor.kr:31337/challs")
-        .then(res => {
-          let challtitles = []
-          res.data.forEach(chall => {
-            challtitles.push(chall.name)
-          })
-          db.collection("challenges").orderBy("points").get()
+        db.collection("challenges").orderBy("points").get()
           .then(snapshot => {
-            snapshot.forEach(doc => {
-              let chall = doc.data()
-              if(!chall.inhouse) {
-                chall.id = doc.id
-                if(this.solved_challs.includes(chall.id)) {
-                  chall.solved = true
-                } else {
-                  chall.solved = false
-                }
-                if(chall.category === 'pwn' || chall.category === 'web') {
-                  if(challtitles.includes(chall.title)) this.challenges.push(chall)   
-                } else this.challenges.push(chall) 
-              }
+            axios.get("https://srv.cykor.kr:31337/challs")
+            .then(res => {
+              let challtitles = []
+              res.data.forEach(chall => {
+                challtitles.push(chall.name)
+              })
+              db.collection("challenges").orderBy("points").get()
+              .then(snapshot => {
+                snapshot.forEach(doc => {
+                  let chall = doc.data()
+                  if(!chall.inhouse) {
+                    chall.id = doc.id
+                    if(this.solved_challs.includes(chall.id)) {
+                      chall.solved = true
+                    } else {
+                      chall.solved = false
+                    }
+                    if(chall.category === 'pwn' || chall.category === 'web') {
+                      if(challtitles.includes(chall.title)) this.challenges.push(chall)   
+                    } else this.challenges.push(chall) 
+                  }
+                })
+              })
             })
           })
-        })
+
+          
       })
         
         

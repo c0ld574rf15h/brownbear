@@ -44,6 +44,7 @@ export default {
     return {
       colors: {
         'pwn': 'red lighten-2',
+        'rev': 'blue lighten-2',
         'web': 'purple lighten-2',
         'forensics': 'indigo ligten-2',
         'crypto': 'pink lighten-2',

@@ -28,7 +28,7 @@
           <div v-if="challenge.category === 'web'">
             <div v-if="challenge.server_link" class="grey--text mt-2">
               <v-icon small>mdi-send</v-icon>
-              Challenge URL: <a>{{ challenge.server_link }}</a>
+              Challenge URL: <a v-bind:href="challenge.server_link">{{ challenge.server_link }}</a>
             </div>
           </div>
           <div v-else>
@@ -90,10 +90,11 @@
 </template>
 
 <script>
-import axios from 'axios'
+//import axios from 'axios'
 import db from '@/firebase/init'
 import Progress from '@/components/layouts/Progress'
 import firebase from 'firebase'
+import axios from 'axios'
 
 export default {
   name: 'archive-challenge',
@@ -121,7 +122,6 @@ export default {
     submit_flag(chall) {
       this.loading = "primary"
       this.alert = false
-
       const functions = firebase.app().functions('asia-northeast1')
       let checkFlag = functions.httpsCallable('checkFlag')
       checkFlag({ flag: this.input_flag, chall_id: chall.id })
@@ -136,8 +136,8 @@ export default {
                   this.snackbar = true
                   chall.solved = true
                   chall.solvers += 1
-                  let newSolve = functions.httpsCallable('newSolve')
-                  newSolve({ user_handle: this.profile, chall_id: chall.id })
+                  let updateSolve = functions.httpsCallable('updateSolve')
+                  updateSolve({ user_handle: this.profile, chall_id: chall.id })
               } else {
                   this.loading = false
                   this.input_flag = "Don't try something woopy"
@@ -188,6 +188,7 @@ export default {
             })
           })
         })
+
       })
         
         

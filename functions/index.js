@@ -27,40 +27,129 @@ exports.checkFlag = functions.region('asia-northeast1').https.onCall(data => {
   })
 })
 
-exports.newSolve = functions.region('asia-northeast1').https.onCall(data => {
+exports.updateAll = functions.region('asia-northeast1').https.onCall(() => {
   let status = "success"
-  let points = 0
 
-  admin.firestore().collection('solved').where("user","==",data.user_handle).get().then(docs => {
-    if (!docs.empty) {
-      let length = docs._size
-      let cnt = 0;
-      docs.forEach(doc => {
-        cnt++
-        admin.firestore().collection('challenges').doc(doc.data().chall).get()
+  const getPoints = (user_handle) => {
+    return new Promise(async (res, rej) => {
+      let challtitiles = []
+      let points = 0
+      await admin.firestore().collection('solved').where("user","==",user_handle).get().then(docs => {
+        if(!docs.empty) {
+          docs.forEach(doc => {
+            challtitiles.push(doc.data().chall)
+          })
+        }
+      }).catch(err => {rej(err)})
+      for (let cnt = 0; cnt < challtitiles.length; cnt++) {
+        await admin.firestore().collection('challenges').doc(challtitiles[cnt]).get()
         .then(solvedChall => {
           points += solvedChall.data().points
-          if (cnt == length) {
-            admin.firestore().collection('users').doc(data.user_handle).update({
-              points: points
-            })
-          }
+          console.log(points, cnt, challtitiles.length)
+          if(cnt == challtitiles.length-1) res(points)
+        }).catch(err => {rej(err)})
+      }
+    })
+  }
+
+  const getUsers = () => {
+    return new Promise(async (res, rej) => {
+      let users = []
+      await admin.firestore().collection('users').get().then(docs => {
+        docs.forEach(doc => {
+          console.log(doc.data())
+          users.push(doc.data().handle)
         })
-      })
-    }
+      }).catch(err => {rej(err)})
+      res(users)
+    })
+  }
+
+  const getChalls = () => {
+    return new Promise(async (res, rej) => {
+      let users = []
+      await admin.firestore().collection('challenges').get().then(docs => {
+        docs.forEach(doc => {
+          console.log(doc.data())
+          users.push(doc.data().title)
+        })
+      }).catch(err => {rej(err)})
+      res(users)
+    })
+  }
+
+  getUsers().then(users => {
+    users.forEach(user_handle => {
+      getPoints(user_handle).then(points => {
+        admin.firestore().collection('users').doc(user_handle).update({
+          points: points
+        })
+      }).catch(err => {console.log(err); status="error"})
+    })
   }).catch(err => {console.log(err); status="error"})
 
-  admin.firestore().collection('solved').where("chall","==",data.chall_id)
-  .get()
+  getChalls().then(challs => {
+    challs.forEach(chall => {
+      admin.firestore().collection('solved').where("chall","==",chall).get()
+      .then(docs => {
+        let solvers_num = docs._size
+        if (docs.empty) {
+          solvers_num = 0
+        } 
+        else {
+          admin.firestore().collection('challenges').doc(chall).update({
+            solvers: solvers_num
+          }).catch(err => {console.log(err); status="error"})
+        }
+      }).catch(err => {console.log(err); status="error"})
+    })
+  })
+
+
+  return { status: status}
+})
+
+exports.updateSolve = functions.region('asia-northeast1').https.onCall(data => {
+  let status = "success"
+
+  const getPoints = () => {
+    return new Promise(async (res, rej) => {
+      let challtitiles = []
+      let points = 0
+      await admin.firestore().collection('solved').where("user","==",data.user_handle).get().then(docs => {
+        if(!docs.empty) {
+          docs.forEach(doc => {
+            challtitiles.push(doc.data().chall)
+          })
+        }
+      }).catch(err => {rej(err)})
+      for (let cnt = 0; cnt < challtitiles.length; cnt++) {
+        await admin.firestore().collection('challenges').doc(challtitiles[cnt]).get()
+        .then(solvedChall => {
+          points += solvedChall.data().points
+          console.log(points, cnt, challtitiles.length)
+          if(cnt == challtitiles.length-1) res(points)
+        }).catch(err => {rej(err)})
+      }
+    })
+  }
+
+  getPoints().then(points => {
+    admin.firestore().collection('users').doc(data.user_handle).update({
+      points: points
+    })
+  }).catch(err => {console.log(err); status="error"})
+
+  admin.firestore().collection('solved').where("chall","==",data.chall_id).get()
   .then(docs => {
-    let solvers_num = docs._size - 1
+    let solvers_num = docs._size
     if (docs.empty) {
       solvers_num = 0
     } 
     else {
       admin.firestore().collection('challenges').doc(data.chall_id).update({
-        solvers: solvers_num+1
-      })
+        solvers: solvers_num
+      }).catch(err => {console.log(err); status="error"})
     }
   }).catch(err => {console.log(err); status="error"})
 

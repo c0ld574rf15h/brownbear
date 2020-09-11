@@ -126,8 +126,8 @@ export default {
                   this.snackbar = true
                   chall.solved = true
                   chall.solvers += 1
-                  let newSolve = functions.httpsCallable('newSolve')
-                  newSolve({ user_handle: this.profile, chall_id: chall.id, })
+                  let updateSolve = functions.httpsCallable('updateSolve')
+                  updateSolve({ user_handle: this.profile, chall_id: chall.id, })
                 } else {
                   this.loading = false
                   this.input_flag = "Don't try something woopy"

@@ -9,7 +9,7 @@
     "deploy": "firebase deploy"
   },
   "dependencies": {
-    "axios": "^0.19.1",
+    "axios": "^0.21.1",
     "core-js": "^3.4.3",
     "firebase": "^7.6.1",
     "js-sha256": "^0.9.0",
